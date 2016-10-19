@@ -46,7 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Backend\BillableItem.cs" />
     <Compile Include="Backend\BookingBackend.cs" />
+    <Compile Include="Backend\Customer.cs" />
     <Compile Include="Backend\Hotel.cs" />
     <Compile Include="Backend\Room.cs" />
     <Compile Include="Form1.cs">

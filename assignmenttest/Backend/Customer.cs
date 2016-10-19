@@ -8,5 +8,6 @@ namespace assignmenttest.Backend
 {
     class Customer
     {
+        string name;
     }
 }
