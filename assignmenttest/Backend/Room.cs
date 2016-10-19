@@ -9,10 +9,14 @@ namespace assignmenttest.Backend
     class Room
     {
         private List<DateTime> reservedDates;
+		private string name;
+		private string description;
+		private float price;
+		private Hotel hotel;
 
-        public Room()
+		public Room(Hotel hotel)
         {
-
+			this.hotel = hotel;
         }
 
     }

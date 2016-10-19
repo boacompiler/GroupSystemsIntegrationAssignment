@@ -9,10 +9,12 @@ namespace assignmenttest.Backend
     class Hotel
     {
         private List<Room> rooms;
+		private string name;
+		private string description;
 
         public Hotel()
         {
-
+			
         }
 
         public List<Room> GetRooms()
@@ -21,10 +23,11 @@ namespace assignmenttest.Backend
             throw new NotImplementedException();
         }
 
-        public List<Room> GetRooms(List<DateTime> requiredDates)
+        public List<Room> GetRooms(List<DateTime> freeDates)
         {
             //return a list of rooms based on the dates they are available
             throw new NotImplementedException();
         }
+			
     }
 }

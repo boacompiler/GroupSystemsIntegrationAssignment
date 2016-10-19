@@ -8,6 +8,12 @@ namespace assignmenttest.Backend
 {
     class Customer
     {
-        string name;
+		//TODO class name "customer" does not properly describe the class, something like transaction would be better?
+        string firstName;
+		string secondName;
+		string address;
+
+		//TODO billing info
+
     }
 }

@@ -34,13 +34,27 @@ namespace assignmenttest.Backend
 
         public bool DatabaseConnectionActive()
         {
+			//returns a bool relating to the status of the db connection
+			throw new NotImplementedException();
+        }
+
+		public void MakeBooking(Room room, List<DateTime> datesReserved, Customer customer)
+        {
+            //this will be passed to a helper class that handles booking in a batch process
             throw new NotImplementedException();
         }
 
-        public void MakeBooking()
-        {
-            //this will be passed to a helper class that handles booking in batch
-            throw new NotImplementedException();
-        }
+		public List<Hotel> GetHotels()
+		{
+			//return a list of hotels
+			throw new NotImplementedException();
+		}
+
+		public List<Room> GetRooms()
+		{
+			//return a list of all rooms from all hotels
+			throw new NotImplementedException();
+		}
+
     }
 }
