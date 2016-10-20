@@ -56,5 +56,11 @@ namespace assignmenttest.Backend
 			throw new NotImplementedException();
 		}
 
+		public List<BillableItem> GetBillableItems()
+		{
+			//return a list of available items
+			throw new NotImplementedException();
+		}
+
     }
 }
