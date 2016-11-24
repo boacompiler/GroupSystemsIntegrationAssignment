@@ -65,7 +65,7 @@ namespace assignmenttest.Backend
         }
         #endregion
 
-        public Room(ref Hotel hotel, int id, string name, string description, float price, List<DateTime> reservedDates)
+        public Room(Hotel hotel, int id, string name, string description, float price, List<DateTime> reservedDates)
         {
 			this.hotel = hotel;
             this.id = id;

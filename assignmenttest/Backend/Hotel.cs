@@ -72,6 +72,14 @@ namespace assignmenttest.Backend
             this.rating = rating;
             this.description = description;
             this.address = address;
+            rooms = new List<Room>();
+        }
+
+        public void AddRoom(int id, string name, string description, float price, List<DateTime> reservedDates)
+        {
+            //cannot be added at construction. so we have to add them later
+            Room room = new Room(this,id,name,description,price,reservedDates);
+            rooms.Add(room);
         }
 
         public List<Room> GetRooms()
