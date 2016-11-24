@@ -8,12 +8,73 @@ namespace assignmenttest.Backend
 {
     class Customer
     {
-		//TODO class name "customer" does not properly describe the class, something like transaction would be better?
-        string firstName;
-		string secondName;
-		string address;
+        private int id;
+        private string firstName;
+        private string secondName;
+        private string address;
 
-		//TODO billing info
+        #region Getters and Setters
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+
+            set
+            {
+                id = value;
+            }
+        }
+
+        public string FirstName
+        {
+            get
+            {
+                return firstName;
+            }
+
+            set
+            {
+                firstName = value;
+            }
+        }
+
+        public string SecondName
+        {
+            get
+            {
+                return secondName;
+            }
+
+            set
+            {
+                secondName = value;
+            }
+        }
+
+        public string Address
+        {
+            get
+            {
+                return address;
+            }
+
+            set
+            {
+                address = value;
+            }
+        }
+
+        #endregion
+
+        public Customer(int id, string firstName, string secondName, string address)
+        {
+            this.id = id;
+            this.firstName = firstName;
+            this.secondName = secondName;
+            this.address = address;
+        }
 
     }
 }

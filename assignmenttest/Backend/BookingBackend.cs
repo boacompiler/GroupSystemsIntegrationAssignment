@@ -38,7 +38,7 @@ namespace assignmenttest.Backend
 			throw new NotImplementedException();
         }
 
-		public void MakeBooking(Room room, List<DateTime> datesReserved, Customer customer)
+		public void MakeBooking(Room room, List<DateTime> datesReserved,List<BillableItem> billableItems, Customer customer)
         {
             //this will be passed to a helper class that handles booking in a batch process
             throw new NotImplementedException();
@@ -50,13 +50,25 @@ namespace assignmenttest.Backend
 			throw new NotImplementedException();
 		}
 
-		public List<Room> GetRooms()
+        public List<Hotel> GetHotels(int rating)
+        {
+            //return a list of hotels by rating
+            throw new NotImplementedException();
+        }
+
+        public List<Room> GetRooms()
 		{
 			//return a list of all rooms from all hotels
 			throw new NotImplementedException();
 		}
 
-		public List<BillableItem> GetBillableItems()
+        public List<Room> GetRooms(List<DateTime> freeDates)
+        {
+            //return a list of all available rooms from all hotels 
+            throw new NotImplementedException();
+        }
+
+        public List<BillableItem> GetBillableItems()
 		{
 			//return a list of available items
 			throw new NotImplementedException();

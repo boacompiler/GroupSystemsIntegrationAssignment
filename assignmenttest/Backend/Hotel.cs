@@ -9,12 +9,69 @@ namespace assignmenttest.Backend
     class Hotel
     {
         private List<Room> rooms;
+        private int id;
 		private string name;
+        private int rating;
 		private string description;
+        private string address;
 
-        public Hotel()
+        #region Getters
+        internal List<Room> Rooms
         {
-			
+            get
+            {
+                return rooms;
+            }
+        }
+
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
+
+        public int Rating
+        {
+            get
+            {
+                return rating;
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return description;
+            }
+        }
+
+        public string Address
+        {
+            get
+            {
+                return address;
+            }
+        }
+        #endregion
+
+        public Hotel(int id, string name, int rating, string description, string address)
+        {
+            this.id = id;
+            this.name = name;
+            this.rating = rating;
+            this.description = description;
+            this.address = address;
         }
 
         public List<Room> GetRooms()

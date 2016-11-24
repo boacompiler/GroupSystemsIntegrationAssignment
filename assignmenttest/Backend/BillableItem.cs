@@ -8,6 +8,7 @@ namespace assignmenttest.Backend
 {
     class BillableItem
     {
+        private int id;
         private string name;
         private string description;
         private float price;
@@ -52,6 +53,27 @@ namespace assignmenttest.Backend
                 price = value;
             }
         }
+
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+
+            set
+            {
+                id = value;
+            }
+        }
         #endregion
+
+        public BillableItem(int id, string name, string description, float price)
+        {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+            this.price = price;
+        }
     }
 }
