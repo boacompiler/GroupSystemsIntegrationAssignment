@@ -9,6 +9,7 @@ namespace assignmenttest.Backend
     class BookingBackend
     {
         private List<Hotel> hotels;
+        private List<BillableItem> items;
 
         public BookingBackend()
         {
