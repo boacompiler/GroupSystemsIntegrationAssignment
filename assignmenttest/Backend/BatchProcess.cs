@@ -58,12 +58,28 @@ namespace assignmenttest
         {
             if (connecttest())
             {
+                try
+                {
+                    conDataBase.Open();
+                    dataAdapter = new MySqlDataAdapter("SELECT * FROM hotel;",conDataBase);
 
+                    dataSet = new DataSet();
+                    dataAdapter.Fill(dataSet);
+                    MessageBox.Show("got " + dataSet.Tables[0].Rows[0][1].ToString());
+                    
+                }
+                catch (Exception ex)
+                {
+
+                    MessageBox.Show("data loading failed: " + ex.Message);
+                }
             }
             else
             {
                 MessageBox.Show("connection failed");
             }
+
+            conDataBase.Close();
         }
 	}
 }
