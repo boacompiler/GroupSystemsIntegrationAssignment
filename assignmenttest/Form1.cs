@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using assignmenttest.Backend;
 
 namespace assignmenttest
 {
@@ -15,6 +16,8 @@ namespace assignmenttest
         public Form1()
         {
             InitializeComponent();
+            //TODO remove
+            //BatchProcess bp = new BatchProcess();
         }
     }
 }
