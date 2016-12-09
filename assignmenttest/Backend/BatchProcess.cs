@@ -1,4 +1,5 @@
 ﻿using System;
+using MySql.Data.MySqlClient;
 
 namespace assignmenttest
 {
@@ -17,6 +18,11 @@ namespace assignmenttest
         public bool IsDatabaseActive()
         {
             throw new NotImplementedException();
+        }
+
+        private void connect()
+        {
+
         }
 	}
 }
