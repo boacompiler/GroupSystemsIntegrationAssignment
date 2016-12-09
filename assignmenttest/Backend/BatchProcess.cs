@@ -81,6 +81,37 @@ namespace assignmenttest
 
             conDataBase.Close();
         }
+
+        public void insertdatatest()
+        {
+            if (connecttest())
+            {
+                MySqlCommand command = conDataBase.CreateCommand();
+                command.CommandText = "INSERT INTO hotel (`idhotel`, `hotel_name`, `star_rating`, `description`, `address`) VALUES ('9', 'hotel 9', '2', 'pretty bad 9 hotel', '9 road');";
+
+                try
+                {
+                    conDataBase.Open();
+
+                    command.ExecuteNonQuery();
+
+                    MessageBox.Show("inserted!");
+                }
+                catch (Exception ex)
+                {
+
+                    MessageBox.Show("data inserting failed: " + ex.Message);
+                }
+
+                
+            }
+            else
+            {
+                MessageBox.Show("connection failed");
+            }
+
+            conDataBase.Close();
+        }
 	}
 }
 

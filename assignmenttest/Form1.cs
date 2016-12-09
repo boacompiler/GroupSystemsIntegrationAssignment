@@ -18,7 +18,7 @@ namespace assignmenttest
             InitializeComponent();
             //TODO remove
             BatchProcess bp = new BatchProcess();
-            bp.getdatatest();
+            bp.insertdatatest();
         }
     }
 }
