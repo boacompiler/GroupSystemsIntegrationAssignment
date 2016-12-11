@@ -35,8 +35,8 @@ namespace assignmenttest
             //MessageBox.Show(commandBatch[0]);
             ProcessBatch();
 
-            //MakeBooking(hotels[0].Rooms[0], new List<DateTime> { new DateTime(2016, 11, 11), new DateTime(2016, 12, 12) }, new List<BillableItem>(), new Customer(420, "bob", "bobson", "fake land"));
-            //MakeBooking(hotels[0].Rooms[0], new List<DateTime> { new DateTime(2016, 11, 11), new DateTime(2016, 12, 12) }, new List<BillableItem> { new BillableItem(34, "", "", 1f), new BillableItem(62, "", "", 1f) }, new Customer(52, "bob", "bobson", "fake land"));
+            MakeBooking(hotels[0].Rooms[0], new List<DateTime> { new DateTime(2016, 11, 11), new DateTime(2016, 12, 12) }, new List<BillableItem>(), new Customer(420, "bob", "bobson", "fake land"));
+            MakeBooking(hotels[0].Rooms[0], new List<DateTime> { new DateTime(2016, 11, 11), new DateTime(2016, 12, 12) }, new List<BillableItem> { new BillableItem(34, "", "", 1f), new BillableItem(62, "", "", 1f) }, new Customer(52, "bob", "bobson", "fake land"));
         }
 
         public void MakeBooking(Room room, List<DateTime> datesReserved, List<BillableItem> billableItems, Customer customer)
@@ -46,20 +46,22 @@ namespace assignmenttest
             int idroom = room.Id;
             string datebegin = datesReserved[0].Year + "-" + datesReserved[0].Month + "-" + datesReserved[0].Day;
             int l = datesReserved.Count - 1;
-            string dateend = datesReserved[l].Year + "-" + datesReserved[l].Month + "-" + datesReserved[l].Day; ;
+            string dateend = datesReserved[l].Year + "-" + datesReserved[l].Month + "-" + datesReserved[l].Day;
+            //we set the customer id to something that is definitely unique
+            customer.Id = currentCustomerID;
+            currentCustomerID++;
             int customerid = customer.Id; // TODO why can frontend team not set id?
-            //TODO make customer insert
+
             commandBatch.Add("INSERT INTO booking (`idbooking`, `idroom`, `date_begin`, `date_end`, `billable_person`) VALUES ('"+idbooking+"', '"+idroom+"', '"+datebegin+"', '"+dateend+"', '"+customerid+"');");
-            //TODO 0 gives an autoincrement, but this does not work for billable items reference
+            commandBatch.Add("INSERT INTO person (`idperson`, `first_name`, `second_name`, `contact_details`) VALUES ('"+customer.Id+"','"+customer.FirstName+"','"+customer.SecondName+"','"+customer.Address+"');");
             for (int i = 0; i < billableItems.Count; i++)
             {
                 commandBatch.Add("INSERT INTO bookingitems (`billable_item`, `idbooking`) VALUES ('"+billableItems[i].Id+"','"+idbooking+"');");
             }
-            //SaveBatch();
+  
             if (ConnectTest())
             {
                 ProcessBatch();
-                //SaveBatch();
             }
             else
             {
