@@ -3,13 +3,11 @@ using System.Data;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using assignmenttest.Backend;
-//TODO remove
-using System.Windows.Forms;
-
 using System.IO;
 
 namespace assignmenttest
 {
+    //handles loading and inserting data into database, if the database connection is lost, inserts are stored to file.
 	class BatchProcess
 	{
         private MySqlConnection conDataBase;
@@ -27,30 +25,32 @@ namespace assignmenttest
 
 		public BatchProcess ()
 		{
-            getdatatest();//TODO replace this
+            GetData();
             ConvertData();
-            //BookingToDatabase();
+
             commandBatch = new List<string>();
             LoadBatch();
-            //MessageBox.Show(commandBatch[0]);
             ProcessBatch();
-
-            MakeBooking(hotels[0].Rooms[0], new List<DateTime> { new DateTime(2016, 11, 11), new DateTime(2016, 12, 12) }, new List<BillableItem>(), new Customer(420, "bob", "bobson", "fake land"));
-            MakeBooking(hotels[0].Rooms[0], new List<DateTime> { new DateTime(2016, 11, 11), new DateTime(2016, 12, 12) }, new List<BillableItem> { new BillableItem(34, "", "", 1f), new BillableItem(62, "", "", 1f) }, new Customer(52, "bob", "bobson", "fake land"));
         }
-
+        /// <summary>
+        /// Makes a booking in the database using the provided arguments
+        /// </summary>
+        /// <param name="room">the room that is being booked</param>
+        /// <param name="datesReserved">a list of the consecutive days it is booked for (can be just the first and last date it is reserved)</param>
+        /// <param name="billableItems">a list of the billable items attached to the booking</param>
+        /// <param name="customer">the customer making the booking</param>
         public void MakeBooking(Room room, List<DateTime> datesReserved, List<BillableItem> billableItems, Customer customer)
         {
             int idbooking = currentBookingID;
             currentBookingID++;
             int idroom = room.Id;
             string datebegin = datesReserved[0].Year + "-" + datesReserved[0].Month + "-" + datesReserved[0].Day;
-            int l = datesReserved.Count - 1;
-            string dateend = datesReserved[l].Year + "-" + datesReserved[l].Month + "-" + datesReserved[l].Day;
+            int last = datesReserved.Count - 1;
+            string dateend = datesReserved[last].Year + "-" + datesReserved[last].Month + "-" + datesReserved[last].Day;
             //we set the customer id to something that is definitely unique
             customer.Id = currentCustomerID;
             currentCustomerID++;
-            int customerid = customer.Id; // TODO why can frontend team not set id?
+            int customerid = customer.Id;
 
             commandBatch.Add("INSERT INTO booking (`idbooking`, `idroom`, `date_begin`, `date_end`, `billable_person`) VALUES ('"+idbooking+"', '"+idroom+"', '"+datebegin+"', '"+dateend+"', '"+customerid+"');");
             commandBatch.Add("INSERT INTO person (`idperson`, `first_name`, `second_name`, `contact_details`) VALUES ('"+customer.Id+"','"+customer.FirstName+"','"+customer.SecondName+"','"+customer.Address+"');");
@@ -68,7 +68,15 @@ namespace assignmenttest
                 SaveBatch();
             }
         }
-
+        /// <summary>
+        /// queries the database connection
+        /// </summary>
+        /// <returns>if true, the database connection is active, if false, it is not active</returns>
+        public bool IsDatabaseActive()
+        {
+            return ConnectTest();
+        }
+        //performs all queued commands in the batch
         private void ProcessBatch()
         {
             List<MySqlCommand> commands = new List<MySqlCommand>();
@@ -91,15 +99,14 @@ namespace assignmenttest
                 commandBatch = new List<string>();
                 SaveBatch();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
                 throw;
             }
 
             conDataBase.Close();
         }
-
+        //saves the current batch of commands to file
         private void SaveBatch()
         {
             File.Create(@".\batch.txt").Close();
@@ -114,7 +121,7 @@ namespace assignmenttest
             writer.Close();
 
         }
-
+        //loads saved commands from a file to the current batch
         private void LoadBatch()
         {
             if (File.Exists(@".\batch.txt"))
@@ -131,16 +138,9 @@ namespace assignmenttest
             }
             
         }
-
-        public bool IsDatabaseActive()
-        {
-            return ConnectTest();
-        }
-
+        //queries the database connection
         private bool ConnectTest()
         {
-            //server=localhost;user id=VSTEST;database=vstestdb;persistsecurityinfo=True
-            //TODO temp server details
             constring = @"server=localhost;database=vstestdb;username=VSTEST;password=password;";
             conDataBase = new MySqlConnection(constring);
 
@@ -154,18 +154,12 @@ namespace assignmenttest
             }
             catch (Exception)
             {
-                //TODO connect test exception
                 throw;
             }
 
             return verified;
         }
-
-        private void GetData()
-        {
-
-        }
-
+        //takes data from dataSet and uses it to populate classes
         private void ConvertData()
         {
             
@@ -195,7 +189,7 @@ namespace assignmenttest
                     {
                         string start = dataSet.Tables[2].Rows[j][2].ToString();
                         string end = dataSet.Tables[2].Rows[j][3].ToString();
-                        //TODO MessageBox.Show(start + " ~ " + start.Substring(6, 4) + " ~ " + start.Substring(3, 2) + " ~ " + start.Substring(0, 2) + ": " + start);
+
                         DateTime startingDate = new DateTime(Int32.Parse(start.Substring(6,4)), Int32.Parse(start.Substring(3,2)), Int32.Parse(start.Substring(0,2)));
                         DateTime endingDate = new DateTime(Int32.Parse(end.Substring(6, 4)), Int32.Parse(end.Substring(3, 2)), Int32.Parse(end.Substring(0,2)));
 
@@ -206,7 +200,7 @@ namespace assignmenttest
                         }
                     }
                 }
-                
+                //add rooms to appropriate hotel
                 hotels.Find(hotel => hotel.Id == hotelid).AddRoom(id,name,description,price,reservedDates);
             }
 
@@ -240,9 +234,9 @@ namespace assignmenttest
             }      
 
         }
-
-        public void getdatatest()
-        {   
+        //retrieves data from the database and stores in a dataset
+        private void GetData()
+        {
             if (ConnectTest())
             {
                 try
@@ -252,53 +246,17 @@ namespace assignmenttest
 
                     dataSet = new DataSet();
                     dataAdapter.Fill(dataSet);
-                    //TODO MessageBox.Show("got " + dataSet.Tables[1].Rows[0][1].ToString());
-                    
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
-                    MessageBox.Show("data loading failed: " + ex.Message);
+                    throw;
                 }
-            }
-            else
-            {
-                MessageBox.Show("connection failed");
-            }
 
-            conDataBase.Close();
+                conDataBase.Close();
+            }
         }
 
-        public void insertdatatest()
-        {
-            if (ConnectTest())
-            {
-                MySqlCommand command = conDataBase.CreateCommand();
-                command.CommandText = "INSERT INTO hotel (`idhotel`, `hotel_name`, `star_rating`, `description`, `address`) VALUES ('9', 'hotel 9', '2', 'pretty bad 9 hotel', '9 road');";
-
-                try
-                {
-                    conDataBase.Open();
-
-                    command.ExecuteNonQuery();
-
-                    MessageBox.Show("inserted!");
-                }
-                catch (Exception ex)
-                {
-
-                    MessageBox.Show("data inserting failed: " + ex.Message);
-                }
-
-                
-            }
-            else
-            {
-                MessageBox.Show("connection failed");
-            }
-
-            conDataBase.Close();
-        }
 	}
 }
 

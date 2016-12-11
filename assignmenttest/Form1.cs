@@ -16,9 +16,6 @@ namespace assignmenttest
         public Form1()
         {
             InitializeComponent();
-            //TODO remove
-            BatchProcess bp = new BatchProcess();
-            //bp.getdatatest();
         }
     }
 }
