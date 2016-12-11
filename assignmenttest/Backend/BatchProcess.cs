@@ -20,6 +20,9 @@ namespace assignmenttest
         private List<Hotel> hotels = new List<Hotel>();
         private List<BillableItem> items = new List<BillableItem>();
 
+        int currentBookingID = 0;
+        int currentCustomerID = 0;
+
         List<string> commandBatch;
 
 		public BatchProcess ()
@@ -38,7 +41,8 @@ namespace assignmenttest
 
         public void MakeBooking(Room room, List<DateTime> datesReserved, List<BillableItem> billableItems, Customer customer)
         {
-            int idbooking = 0; //TODO id gen
+            int idbooking = currentBookingID;
+            currentBookingID++;
             int idroom = room.Id;
             string datebegin = datesReserved[0].Year + "-" + datesReserved[0].Month + "-" + datesReserved[0].Day;
             int l = datesReserved.Count - 1;
@@ -55,6 +59,7 @@ namespace assignmenttest
             if (ConnectTest())
             {
                 ProcessBatch();
+                //SaveBatch();
             }
             else
             {
@@ -212,7 +217,25 @@ namespace assignmenttest
                 float price = float.Parse(dataSet.Tables[5].Rows[i][3].ToString());
                 BillableItem billableItem = new BillableItem(id,name,description,price);
                 items.Add(billableItem);
-            }       
+            }
+            //get largest id and set currentid to one larger.
+            for (int i = 0; i < dataSet.Tables[2].Rows.Count; i++)
+            {
+                int bookingid = Int32.Parse(dataSet.Tables[2].Rows[i][0].ToString());
+                if (bookingid >= currentBookingID)
+                {
+                    currentBookingID = bookingid + 1;
+                }
+            }
+            //get largest id and set currentid to one larger.
+            for (int i = 0; i < dataSet.Tables[4].Rows.Count; i++)
+            {
+                int customerid = Int32.Parse(dataSet.Tables[4].Rows[i][0].ToString());
+                if (customerid >= currentCustomerID)
+                {
+                    currentCustomerID = customerid + 1;
+                }
+            }      
 
         }
 
