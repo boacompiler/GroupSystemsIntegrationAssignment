@@ -23,7 +23,27 @@ namespace assignmenttest
 
         List<string> commandBatch;
 
-		public BatchProcess ()
+        #region Getters
+
+        internal List<Hotel> Hotels
+        {
+            get
+            {
+                return hotels;
+            }
+        }
+
+        internal List<BillableItem> Items
+        {
+            get
+            {
+                return items;
+            }
+        }
+
+        #endregion
+
+        public BatchProcess ()
 		{
             GetData();
             ConvertData();
