@@ -13,20 +13,104 @@ namespace assignmenttest
         private MySqlConnection conDataBase;
         private string constring;
         DataSet dataSet;
-        DataTable dataChanges;
         MySqlDataAdapter dataAdapter;
-        
-        
+
+        List<string> commandBatch;
 
 		public BatchProcess ()
 		{
             getdatatest();
             ConvertData();
+            //BookingToDatabase();
+            commandBatch = new List<string>();
 		}
 
         public void MakeBooking(Room room, List<DateTime> datesReserved, List<BillableItem> billableItems, Customer customer)
         {
-            
+            int idbooking = 0; //TODO id gen
+            int idroom = room.Id;
+            string datebegin = datesReserved[0].Year + "-" + datesReserved[0].Month + "-" + datesReserved[0].Day;
+            int l = datesReserved.Count - 1;
+            string dateend = datesReserved[l].Year + "-" + datesReserved[l].Month + "-" + datesReserved[l].Day; ;
+            int customerid = customer.Id; // TODO why can frontend team not set id?
+            //TODO make customer insert
+            commandBatch.Add("INSERT INTO booking (`idbooking`, `idroom`, `date_begin`, `date_end`, `billable_person`) VALUES ('"+idbooking+"', '"+idroom+"', '"+datebegin+"', '"+dateend+"', '"+customerid+"');");
+
+            for (int i = 0; i < billableItems.Count; i++)
+            {
+                commandBatch.Add("INSERT INTO bookingitems (`billable_item`, `idbooking`) VALUES ('"+billableItems[0].Id+"','"+idbooking+"');");
+            }
+
+            if (ConnectTest())
+            {
+                ProcessBatch();
+            }
+            else
+            {
+                SaveBatch();
+            }
+        }
+
+        //private void BookingToDatabase(Room room, List<DateTime> datesReserved, List<BillableItem> billableItems, Customer customer)
+        //{
+        //    MySqlCommand command = conDataBase.CreateCommand();
+        //    int idbooking = 0;
+        //    int idroom = room.Id;
+        //    string datebegin = datesReserved[0].Year + "-" + datesReserved[0].Month + "-" + datesReserved[0].Day;
+        //    int l = datesReserved.Count - 1;
+        //    string dateend = datesReserved[l].Year + "-" + datesReserved[l].Month + "-" + datesReserved[l].Day; ;
+        //    int customerid = customer.Id;
+
+        //    command.CommandText = "INSERT INTO booking (`idbooking`, `idroom`, `date_begin`, `date_end`, `billable_person`) VALUES ('"+idbooking+"', '"+idroom+"', '"+datebegin+"', '"+dateend+"', '"+customerid+"');";
+
+        //    try
+        //    {
+        //        conDataBase.Open();
+
+        //        command.ExecuteNonQuery();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("data inserting failed: " + ex.Message);
+        //    }
+        //}
+
+        private void ProcessBatch()
+        {
+            List<MySqlCommand> commands = new List<MySqlCommand>();
+
+            for (int i = 0; i < commandBatch.Count; i++)
+            {
+                MySqlCommand command = conDataBase.CreateCommand();
+                command.CommandText = commandBatch[i];
+            }
+
+            try
+            {
+                conDataBase.Open();
+                for (int i = 0; i < commands.Count; i++)
+                {
+                    commands[i].ExecuteNonQuery();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            conDataBase.Close();
+        }
+
+        private void SaveBatch()
+        {
+
+        }
+
+        private void LoadBatch()
+        {
+
         }
 
         public bool IsDatabaseActive()
@@ -148,7 +232,7 @@ namespace assignmenttest
 
                     dataSet = new DataSet();
                     dataAdapter.Fill(dataSet);
-                    MessageBox.Show("got " + dataSet.Tables[1].Rows[0][1].ToString());
+                    //TODO MessageBox.Show("got " + dataSet.Tables[1].Rows[0][1].ToString());
                     
                 }
                 catch (Exception ex)
