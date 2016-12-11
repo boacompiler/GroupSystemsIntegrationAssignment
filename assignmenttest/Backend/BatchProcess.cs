@@ -6,6 +6,8 @@ using assignmenttest.Backend;
 //TODO remove
 using System.Windows.Forms;
 
+using System.IO;
+
 namespace assignmenttest
 {
 	class BatchProcess
@@ -15,15 +17,24 @@ namespace assignmenttest
         DataSet dataSet;
         MySqlDataAdapter dataAdapter;
 
+        private List<Hotel> hotels = new List<Hotel>();
+        private List<BillableItem> items = new List<BillableItem>();
+
         List<string> commandBatch;
 
 		public BatchProcess ()
 		{
-            getdatatest();
+            getdatatest();//TODO replace this
             ConvertData();
             //BookingToDatabase();
             commandBatch = new List<string>();
-		}
+            LoadBatch();
+            //MessageBox.Show(commandBatch[0]);
+            ProcessBatch();
+
+            //MakeBooking(hotels[0].Rooms[0], new List<DateTime> { new DateTime(2016, 11, 11), new DateTime(2016, 12, 12) }, new List<BillableItem>(), new Customer(420, "bob", "bobson", "fake land"));
+            //MakeBooking(hotels[0].Rooms[0], new List<DateTime> { new DateTime(2016, 11, 11), new DateTime(2016, 12, 12) }, new List<BillableItem> { new BillableItem(34, "", "", 1f), new BillableItem(62, "", "", 1f) }, new Customer(52, "bob", "bobson", "fake land"));
+        }
 
         public void MakeBooking(Room room, List<DateTime> datesReserved, List<BillableItem> billableItems, Customer customer)
         {
@@ -35,12 +46,12 @@ namespace assignmenttest
             int customerid = customer.Id; // TODO why can frontend team not set id?
             //TODO make customer insert
             commandBatch.Add("INSERT INTO booking (`idbooking`, `idroom`, `date_begin`, `date_end`, `billable_person`) VALUES ('"+idbooking+"', '"+idroom+"', '"+datebegin+"', '"+dateend+"', '"+customerid+"');");
-
+            //TODO 0 gives an autoincrement, but this does not work for billable items reference
             for (int i = 0; i < billableItems.Count; i++)
             {
-                commandBatch.Add("INSERT INTO bookingitems (`billable_item`, `idbooking`) VALUES ('"+billableItems[0].Id+"','"+idbooking+"');");
+                commandBatch.Add("INSERT INTO bookingitems (`billable_item`, `idbooking`) VALUES ('"+billableItems[i].Id+"','"+idbooking+"');");
             }
-
+            //SaveBatch();
             if (ConnectTest())
             {
                 ProcessBatch();
@@ -51,31 +62,6 @@ namespace assignmenttest
             }
         }
 
-        //private void BookingToDatabase(Room room, List<DateTime> datesReserved, List<BillableItem> billableItems, Customer customer)
-        //{
-        //    MySqlCommand command = conDataBase.CreateCommand();
-        //    int idbooking = 0;
-        //    int idroom = room.Id;
-        //    string datebegin = datesReserved[0].Year + "-" + datesReserved[0].Month + "-" + datesReserved[0].Day;
-        //    int l = datesReserved.Count - 1;
-        //    string dateend = datesReserved[l].Year + "-" + datesReserved[l].Month + "-" + datesReserved[l].Day; ;
-        //    int customerid = customer.Id;
-
-        //    command.CommandText = "INSERT INTO booking (`idbooking`, `idroom`, `date_begin`, `date_end`, `billable_person`) VALUES ('"+idbooking+"', '"+idroom+"', '"+datebegin+"', '"+dateend+"', '"+customerid+"');";
-
-        //    try
-        //    {
-        //        conDataBase.Open();
-
-        //        command.ExecuteNonQuery();
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("data inserting failed: " + ex.Message);
-        //    }
-        //}
-
         private void ProcessBatch()
         {
             List<MySqlCommand> commands = new List<MySqlCommand>();
@@ -84,6 +70,7 @@ namespace assignmenttest
             {
                 MySqlCommand command = conDataBase.CreateCommand();
                 command.CommandText = commandBatch[i];
+                commands.Add(command);
             }
 
             try
@@ -93,10 +80,13 @@ namespace assignmenttest
                 {
                     commands[i].ExecuteNonQuery();
                 }
-            }
-            catch (Exception)
-            {
 
+                commandBatch = new List<string>();
+                SaveBatch();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
                 throw;
             }
 
@@ -105,12 +95,34 @@ namespace assignmenttest
 
         private void SaveBatch()
         {
+            File.Create(@".\batch.txt").Close();
+            
+            StreamWriter writer = new StreamWriter(@".\batch.txt", true);
+
+            for (int i = 0; i < commandBatch.Count; i++)
+            {
+                writer.WriteLine(commandBatch[i]);
+            }
+
+            writer.Close();
 
         }
 
         private void LoadBatch()
         {
+            if (File.Exists(@".\batch.txt"))
+            {
+                StreamReader reader = new StreamReader(@".\batch.txt");
 
+                string line = "";
+                while ((line = reader.ReadLine()) != null)
+                {
+                    commandBatch.Add(line);
+                }
+
+                reader.Close();
+            }
+            
         }
 
         public bool IsDatabaseActive()
@@ -136,6 +148,7 @@ namespace assignmenttest
             catch (Exception)
             {
                 //TODO connect test exception
+                throw;
             }
 
             return verified;
@@ -148,9 +161,7 @@ namespace assignmenttest
 
         private void ConvertData()
         {
-            List<Hotel> hotels = new List<Hotel>();
-            List<BillableItem> items = new List<BillableItem>();
-
+            
             //Create and store hotel classes
             for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
             {
@@ -201,23 +212,7 @@ namespace assignmenttest
                 float price = float.Parse(dataSet.Tables[5].Rows[i][3].ToString());
                 BillableItem billableItem = new BillableItem(id,name,description,price);
                 items.Add(billableItem);
-            }
-
-            //string a = "";
-            //for (int i = 0; i < items.Count; i++)
-            //{
-            //    a += items[i].Name + " ";
-            //}
-            //MessageBox.Show(a);
-
-            //string a = "";
-            //for (int i = 0; i < hotels[0].Rooms[0].ReservedDates.Count; i++)
-            //{
-            //    a += hotels[0].Rooms[0].ReservedDates[i] + " \n";
-            //}
-            //MessageBox.Show(a);
-
-            
+            }       
 
         }
 
