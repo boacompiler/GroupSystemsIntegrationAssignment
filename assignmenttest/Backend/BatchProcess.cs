@@ -51,6 +51,8 @@ namespace assignmenttest
             commandBatch = new List<string>();
             LoadBatch();
             ProcessBatch();
+
+            System.Windows.Forms.MessageBox.Show(hotels[0].Name);
         }
         /// <summary>
         /// Makes a booking in the database using the provided arguments
@@ -161,7 +163,7 @@ namespace assignmenttest
         //queries the database connection
         private bool ConnectTest()
         {
-            constring = @"server=localhost;database=vstestdb;username=VSTEST;password=password;";
+            constring = @"server=localhost;database=new_schema;username=VSTEST;password=password;";
             conDataBase = new MySqlConnection(constring);
 
             bool verified = false;
@@ -198,7 +200,7 @@ namespace assignmenttest
                 int hotelid = Int32.Parse(dataSet.Tables[1].Rows[i][1].ToString());
                 float price = float.Parse(dataSet.Tables[1].Rows[i][2].ToString());
                 string name = dataSet.Tables[1].Rows[i][3].ToString();
-                string description = dataSet.Tables[1].Rows[i][4].ToString();
+                //string description = dataSet.Tables[1].Rows[i][4].ToString();
 
                 List<DateTime> reservedDates = new List<DateTime>();
 
@@ -221,7 +223,7 @@ namespace assignmenttest
                     }
                 }
                 //add rooms to appropriate hotel
-                hotels.Find(hotel => hotel.Id == hotelid).AddRoom(id,name,description,price,reservedDates);
+                hotels.Find(hotel => hotel.Id == hotelid).AddRoom(id,name,"",price,reservedDates);
             }
 
             //create and store billable item classes
@@ -262,7 +264,7 @@ namespace assignmenttest
                 try
                 {
                     conDataBase.Open();
-                    dataAdapter = new MySqlDataAdapter("SELECT * FROM hotel; SELECT * FROM room; SELECT * FROM booking; SELECT * FROM bookingitems; SELECT * FROM person; SELECT * FROM `billable item`;", conDataBase);
+                    dataAdapter = new MySqlDataAdapter("SELECT * FROM hotel; SELECT * FROM room; SELECT * FROM booking; SELECT * FROM booking_items; SELECT * FROM person; SELECT * FROM `billable_items`;", conDataBase);
 
                     dataSet = new DataSet();
                     dataAdapter.Fill(dataSet);
