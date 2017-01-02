@@ -5,6 +5,8 @@ using MySql.Data.MySqlClient;
 using assignmenttest.Backend;
 using System.IO;
 
+using System.Windows.Forms;
+
 namespace assignmenttest
 {
     //handles loading and inserting data into database, if the database connection is lost, inserts are stored to file.
@@ -51,6 +53,8 @@ namespace assignmenttest
             commandBatch = new List<string>();
             LoadBatch();
             ProcessBatch();
+
+            
         }
         /// <summary>
         /// Makes a booking in the database using the provided arguments
@@ -71,12 +75,13 @@ namespace assignmenttest
             customer.Id = currentCustomerID;
             currentCustomerID++;
             int customerid = customer.Id;
+            MessageBox.Show(customer.Id + "");
 
             commandBatch.Add("INSERT INTO booking (`idbooking`, `idroom`, `date_begin`, `date_end`, `billable_person`) VALUES ('"+idbooking+"', '"+idroom+"', '"+datebegin+"', '"+dateend+"', '"+customerid+"');");
             commandBatch.Add("INSERT INTO person (`idperson`, `first_name`, `second_name`, `contact_details`) VALUES ('"+customer.Id+"','"+customer.FirstName+"','"+customer.SecondName+"','"+customer.Address+"');");
             for (int i = 0; i < billableItems.Count; i++)
             {
-                commandBatch.Add("INSERT INTO bookingitems (`billable_item`, `idbooking`) VALUES ('"+billableItems[i].Id+"','"+idbooking+"');");
+                commandBatch.Add("INSERT INTO booking_items (`idbillable_item`, `idbooking`) VALUES ('"+billableItems[i].Id+"','"+idbooking+"');");
             }
   
             if (ConnectTest())
@@ -161,7 +166,7 @@ namespace assignmenttest
         //queries the database connection
         private bool ConnectTest()
         {
-            constring = @"server=localhost;database=vstestdb;username=VSTEST;password=password;";
+            constring = @"server=localhost;database=dbwithdata;username=VSTEST;password=password;";
             conDataBase = new MySqlConnection(constring);
 
             bool verified = false;
@@ -262,7 +267,7 @@ namespace assignmenttest
                 try
                 {
                     conDataBase.Open();
-                    dataAdapter = new MySqlDataAdapter("SELECT * FROM hotel; SELECT * FROM room; SELECT * FROM booking; SELECT * FROM bookingitems; SELECT * FROM person; SELECT * FROM `billable item`;", conDataBase);
+                    dataAdapter = new MySqlDataAdapter("SELECT * FROM hotel; SELECT * FROM room; SELECT * FROM booking; SELECT * FROM booking_items; SELECT * FROM person; SELECT * FROM `billable_items`;", conDataBase);
 
                     dataSet = new DataSet();
                     dataAdapter.Fill(dataSet);
