@@ -64,7 +64,7 @@ namespace assignmenttest.Backend
             if (Hotel.Hotel_rating == 5)
             {
                 
-                return (Hotel.Hotel_name);// the list does not want to return a string, and i have not been able to change this
+                return (hotels);// the list does not want to return a string, and i have not been able to change this
                                           // this return also goes in all the ifs down to if rating =1
             }
             else if (Hotel.Hotel_rating == 4)
@@ -88,6 +88,7 @@ namespace assignmenttest.Backend
                return(null);
             }
 
+            return (new List<Hotel> { });
             //throw new NotImplementedException();
         }
 
@@ -123,7 +124,7 @@ namespace assignmenttest.Backend
         public List<BillableItem> GetBillableItems()
 		{
 			//return a list of available items
-            return (Hotel.Hotel_name);
+            return (items);
             if (hotels == null)
             {
                 throw new NotImplementedException();
