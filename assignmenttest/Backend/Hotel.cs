@@ -14,6 +14,8 @@ namespace assignmenttest.Backend
         private int rating;
 		private string description;
         private string address;
+        public static string Hotel_name;
+        public static int Hotel_rating;
 
         #region Getters
         internal List<Room> Rooms
@@ -73,6 +75,9 @@ namespace assignmenttest.Backend
             this.description = description;
             this.address = address;
             rooms = new List<Room>();
+            Hotel_name = name;
+            Hotel_rating = rating;
+
         }
 
         public void AddRoom(int id, string name, string description, float price, List<DateTime> reservedDates)
@@ -85,13 +90,30 @@ namespace assignmenttest.Backend
         public List<Room> GetRooms()
         {
             //return a list of rooms
-            throw new NotImplementedException();
+            return(rooms); // simply returning and throwing an error if rooms is empty
+            if(rooms == null)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public List<Room> GetRooms(List<DateTime> freeDates)
         {
             //return a list of rooms based on the dates they are available
-            throw new NotImplementedException();
+            while (id != null)// this should be a foreach for the rooms
+            {
+                
+                    if (freeDates != Room.ReservedDate) ;
+                    {
+                        return (rooms);
+                    }
+                
+            }
+            if (rooms == null)
+            {
+                throw new NotImplementedException(); //throwing an error if the rooms list is empty
+            }
+            return(null);//returning something if the other statements come back empty, this shouldn't happen but the program errors without it
         }
 			
     }

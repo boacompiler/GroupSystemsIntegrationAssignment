@@ -14,6 +14,9 @@ namespace assignmenttest.Backend
 		private string description;
 		private float price;
 		private Hotel hotel;
+        public static int RoomID = 0;
+        public static List<DateTime> ReservedDate;
+      
 
         #region Getters
         public List<DateTime> ReservedDates
@@ -73,6 +76,8 @@ namespace assignmenttest.Backend
             this.description = description;
             this.price = price;
             this.reservedDates = reservedDates;
+            Room.RoomID = id;
+            Room.ReservedDate = reservedDates;
         }
 
     }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace assignmenttest.Backend
 {
     class BookingBackend
@@ -48,31 +50,84 @@ namespace assignmenttest.Backend
 		public List<Hotel> GetHotels()
 		{
 			//return a list of hotels
-			throw new NotImplementedException();
+            return(hotels);
+            if (hotels == null) //returning hotels and throwing an error if there are no hotels
+            {
+                throw new NotImplementedException();
+            }
 		}
 
         public List<Hotel> GetHotels(int rating)
         {
+          
             //return a list of hotels by rating
-            throw new NotImplementedException();
+            if (Hotel.Hotel_rating == 5)
+            {
+                
+                return (Hotel.Hotel_name);// the list does not want to return a string, and i have not been able to change this
+                                          // this return also goes in all the ifs down to if rating =1
+            }
+            else if (Hotel.Hotel_rating == 4)
+            {
+                
+            }
+            else if (Hotel.Hotel_rating == 3)
+            {
+                
+            }
+            else if (Hotel.Hotel_rating == 2)
+            {
+                
+            }
+            else if (Hotel.Hotel_rating == 1)
+            {
+                
+            }
+            else
+            {
+               return(null);
+            }
+
+            //throw new NotImplementedException();
         }
 
         public List<Room> GetRooms()
 		{
 			//return a list of all rooms from all hotels
+            //for(all hotels);  //this should be a foreach in hotels
+            {
+            // return(Room.RoomID);
+            }
+            
 			throw new NotImplementedException();
 		}
 
         public List<Room> GetRooms(List<DateTime> freeDates)
         {
             //return a list of all available rooms from all hotels 
-            throw new NotImplementedException();
+
+            if (Room.ReservedDate != freeDates)
+            {
+                // return (Room.RoomID); 
+            }
+
+            //then as above
+
+            // if (hotels == null)
+            {
+                throw new NotImplementedException();
+            }
+
         }
 
         public List<BillableItem> GetBillableItems()
 		{
 			//return a list of available items
-			throw new NotImplementedException();
+            return (Hotel.Hotel_name);
+            if (hotels == null)
+            {
+                throw new NotImplementedException();
+            }
 		}
 
     }
